@@ -9,7 +9,7 @@ opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/4.0')]
 opener.addheaders = [('Content-Type', 'application/oct-stream')]
 
-url = "http://search.danawa.com/dsearch.php?tab=goodsmain&volumeType=vm&"
+url = "http://search.danawa.com/dsearch.php?tab=goodsmain&limit=50&"
 
 
 def get_page(key):
@@ -25,7 +25,7 @@ keyword = sys.argv[1]
 result = get_page(keyword).decode('euc-kr')
 productList = result.split("<th")[1:]
 outList = []
-popularity = 20
+popularity = 50
 for productString in productList:
     productName = productString.split('</a')[2].split('\t\t\t')[4] \
         .replace('<b>', '').replace('</b>', '')

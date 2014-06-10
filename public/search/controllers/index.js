@@ -12,7 +12,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
             $scope.data = data;
             $scope.getBrands();
             $scope.groupedData = $scope.groupBrands();
-            $scope.d3Init($scope.groupedData, 'price');
+            $scope.d3Init($scope.groupedData, 'popularity');
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
@@ -131,7 +131,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
                 var transition = d3.transition()
                 .duration(d3.event.altKey ? 7500 : 750)
                 .tween('zoom', function(d) {
-                    var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 4 + margin]);
+                    var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 6 + margin]);
                     return function(t) { zoomTo(i(t)); };
                 });
             }
