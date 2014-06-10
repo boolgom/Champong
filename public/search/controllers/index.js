@@ -12,7 +12,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
             $scope.data = data;
             $scope.getBrands();
             $scope.groupedData = $scope.groupBrands();
-            $scope.d3Init($scope.groupedData, 'popularity');
+            $scope.d3Init($scope.groupedData, 'price');
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
