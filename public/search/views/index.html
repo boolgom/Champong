@@ -17,7 +17,7 @@
         <div ng-show="currentItem.children && !currentItem.parent">
             {{currentItem.name}}에 {{currentItem.children.length}}개의 브랜드가 있습니다.
         </div>
-        <div ng-show="!currentItem.children">
+        <div ng-show="!currentItem.children && currentItem.price">
             <img class="productImage" ng-src="{{currentItem.image}}">
             <br>
             {{currentItem.name}}
@@ -25,6 +25,9 @@
             설명: {{currentItem.description}}
             <br>
             가격: {{currentItem.price}}원
+        </div>
+        <div ng-show="!currentItem.children && !currentItem.price">
+            검색결과가 없습니다.
         </div>
     </div>
     </section>
