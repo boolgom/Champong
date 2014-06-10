@@ -27,3 +27,7 @@
     position: absolute;
     right: 10%;
 }
+
+.productImage {
+    width: 400px;
+}

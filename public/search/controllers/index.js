@@ -4,6 +4,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
 
     $scope.searchQuery = decodeURI($location.url().substring(8));
     $scope.brands = [];
+    $scope.currentItem = null;
 
     $scope.init = function () {
         $http.post('/articlewithname/' + encodeURI($scope.searchQuery), {'foo':'bar'})
@@ -55,6 +56,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
             for (var j = 0; j<$scope.data.children.length; j++) {
                 var item = $scope.data.children[j];
                 if (item.name.indexOf(brand) == 0) {
+                    item.name = item.name.replace(brand, "");
                     brandList.push(item);
                 }
             }
@@ -63,7 +65,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
                 'children': brandList
             });
         }
-        var root = {'name': 'graph', 'children': categoryList};
+        var root = {'name': '전체', 'children': categoryList};
         return root;
     };
 
@@ -129,6 +131,9 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
             .filter(function(d) { return d.parent === focus || d === focus || this.style.display === 'inline'; })
             .style('fill-opacity', function(d) { return d.parent === focus || d === focus ? 1 : 0; })
             .each('start', function(d) { if (d.parent === focus) this.style.display = 'inline'; })
+            $scope.$apply(function () {
+                $scope.currentItem = d;
+            });
         }
 
         function zoomTo(v) {
@@ -137,6 +142,8 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
             circle.attr('r', function(d) { return d.r * k; });
         }
         d3.select(self.frameElement).style('height', diameter + 'px');
+
+        $scope.currentItem = root;
     };
 
 
