@@ -120,12 +120,21 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
         function zoom(d) {
             var focus0 = focus; focus = d;
 
-            var transition = d3.transition()
-            .duration(d3.event.altKey ? 7500 : 750)
-            .tween('zoom', function(d) {
-                var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
-                return function(t) { zoomTo(i(t)); };
-            });
+            if (d.children) {
+                var transition = d3.transition()
+                .duration(d3.event.altKey ? 7500 : 750)
+                .tween('zoom', function(d) {
+                    var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+                    return function(t) { zoomTo(i(t)); };
+                });
+            } else {
+                var transition = d3.transition()
+                .duration(d3.event.altKey ? 7500 : 750)
+                .tween('zoom', function(d) {
+                    var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 4 + margin]);
+                    return function(t) { zoomTo(i(t)); };
+                });
+            }
 
             transition.selectAll('text')
             .filter(function(d) { return d.parent === focus || d === focus || this.style.display === 'inline'; })

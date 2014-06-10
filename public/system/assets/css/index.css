@@ -31,3 +31,7 @@
 .productImage {
     width: 400px;
 }
+
+.categorySelector {
+    padding-bottom: 20px;
+}

@@ -3,11 +3,13 @@
     <div class="graph" id="graph">
     </div>
     <div class="controlView">
-        <span>set category : </span>
-        <div class="btn-group">
-            <button type="button" class="btn btn-default" ng-click="byPrice()">Price</button>
-            <button type="button" class="btn btn-default" ng-click="byPopularity()">Popularity</button>
-            <button type="button" class="btn btn-default" ng-click="byReleaseDate()">Release Date</button>
+        <div class="categorySelector">
+            <span>set category : </span>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default" ng-click="byPrice()">Price</button>
+                <button type="button" class="btn btn-default" ng-click="byPopularity()">Popularity</button>
+                <button type="button" class="btn btn-default" ng-click="byReleaseDate()">Release Date</button>
+            </div>
         </div>
         <div ng-show="currentItem.children && currentItem.parent">
             {{currentItem.name}}에 {{currentItem.children.length}}개의 상품이 있습니다.
@@ -25,4 +27,4 @@
             가격: {{currentItem.price}}원
         </div>
     </div>
-</section>
+    </section>
