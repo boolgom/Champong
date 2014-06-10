@@ -33,8 +33,11 @@ for productString in productList:
         .group(1)
     productImgSrc = 'http:' + \
         re.search('<img src="(.+?)"[^>]*>', productString).group(1)
-    productPrice = re.search('<em[^>]*>(.+?)</em>', productString).group(1)
-    productPrice = productPrice[:-1].replace(',', '')
+    try:
+        productPrice = re.search('<em[^>]*>(.+?)</em>', productString).group(1)
+        productPrice = productPrice[:-1].replace(',', '')
+    except:
+        productPrice = 1
     data = {'name': productName, 'description': productDescription,
             'image': productImgSrc, 'price': productPrice,
             'popularity': popularity}

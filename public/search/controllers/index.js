@@ -1,21 +1,74 @@
-'use strict';
-
 angular.module('mean.system').controller('ResultController', ['$scope', '$location', '$http', 'Global', function ($scope, $location, $http, Global) {
+    Scope = $scope;
     $scope.global = Global;
 
     $scope.searchQuery = decodeURI($location.url().substring(8));
+    $scope.brands = [];
 
     $scope.init = function () {
         $http.post('/articlewithname/' + encodeURI($scope.searchQuery), {'foo':'bar'})
         .success(function(data, status, headers, config) {
             $scope.data = data;
-            $scope.d3Init($scope.data);
+            $scope.getBrands();
+            $scope.groupedData = $scope.groupBrands();
+            $scope.d3Init($scope.groupedData, 'popularity');
         }).error(function(data, status, headers, config) {
             $scope.status = status;
         });
     };
 
-    $scope.d3Init = function(root) {
+    $scope.byPrice = function () {
+        $scope.d3Init($scope.groupedData, 'price');
+    };
+
+    $scope.byPopularity = function () {
+        $scope.d3Init($scope.groupedData, 'popularity');
+    };
+
+    $scope.byReleaseDate = function () {
+        $scope.d3Init($scope.groupedData, 'popularity');
+    };
+
+    $scope.getBrands = function () {
+        for (var i = 0; i<$scope.data.children.length; i++) {
+            var name = $scope.data.children[i].name;
+            var firstWord = '';
+            for (var j=0;j<name.length;j++)
+            {
+                if (name[j]==' ')
+                    break;
+                else
+                    firstWord = firstWord + name[j];
+            }
+            $scope.brands.push(firstWord);
+        };
+        $scope.brands = $scope.brands.filter(function(elem, pos) {
+            return $scope.brands.indexOf(elem) == pos;
+        });
+    };
+
+    $scope.groupBrands = function () {
+        var categoryList = [];
+        for (var i = 0; i<$scope.brands.length; i++) {
+            var brand = $scope.brands[i];
+            var brandList = [];
+            for (var j = 0; j<$scope.data.children.length; j++) {
+                var item = $scope.data.children[j];
+                if (item.name.indexOf(brand) == 0) {
+                    brandList.push(item);
+                }
+            }
+            categoryList.push({
+                'name': brand,
+                'children': brandList
+            });
+        }
+        var root = {'name': 'graph', 'children': categoryList};
+        return root;
+    };
+
+    $scope.d3Init = function(root, property) {
+        document.getElementById('graph').innerHTML = '';
         var margin = 20,
         diameter = 700;
 
@@ -27,7 +80,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
         var pack = d3.layout.pack()
         .padding(2)
         .size([diameter - margin, diameter - margin])
-        .value(function(d) { return d.price; })
+        .value(function(d) { return d[property]; })
 
         var svg = d3.select('#graph').append('svg')
         .attr('width', diameter)
@@ -51,7 +104,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
         .enter().append('text')
         .attr('class', 'label')
         .style('fill-opacity', function(d) { return d.parent === root ? 1 : 0; })
-        //.style('display', function(d) { return d.parent === root ? null : 'none'; })
+        .style('display', function(d) { return d.parent === root ? null : 'none'; })
         .text(function(d) { return d.name; });
 
         var node = svg.selectAll('circle,text');
@@ -72,13 +125,10 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
                 return function(t) { zoomTo(i(t)); };
             });
 
-            /*
             transition.selectAll('text')
-            .filter(function(d) { return d.parent === focus || this.style.display === 'inline'; })
-            .style('fill-opacity', function(d) { return d.parent === focus ? 1 : 0; })
+            .filter(function(d) { return d.parent === focus || d === focus || this.style.display === 'inline'; })
+            .style('fill-opacity', function(d) { return d.parent === focus || d === focus ? 1 : 0; })
             .each('start', function(d) { if (d.parent === focus) this.style.display = 'inline'; })
-            .each('end', function(d) { if (d.parent !== focus) this.style.display = 'none'; });
-            */
         }
 
         function zoomTo(v) {
