@@ -7,3 +7,15 @@
     width: 50%;
     margin: 0 auto;
 }
+
+.navbar {
+    background-color: #F5A936 !important;
+}
+
+.graph {
+    width:700px;
+}
+
+.label {
+    text-anchor: middle;
+}

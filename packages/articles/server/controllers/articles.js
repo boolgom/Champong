@@ -1,4 +1,5 @@
 'use strict';
+var spawn = require('child_process').spawn;
 
 /**
  * Module dependencies.
@@ -17,6 +18,19 @@ exports.article = function(req, res, next, id) {
         if (!article) return next(new Error('Failed to load article ' + id));
         req.article = article;
         next();
+    });
+};
+
+exports.articleByName = function(req, res, next, id) {
+    var python = spawn('python',  ['/Users/boolgom/Develop/Champong/packages/articles/server/controllers/wrapper.py', id]);
+    var output = '';
+    python.stdout.on('data', function(data){
+        output += data;
+    });
+    python.on('close', function(code){
+        if (code !== 0) {  return res.send(500, code); }
+        res.write(output);
+        res.end();
     });
 };
 
@@ -97,4 +111,8 @@ exports.all = function(req, res) {
             res.jsonp(articles);
         }
     });
+};
+
+exports.showWithName = function(req, res) {
+    res.jsonp(req.searchResult);
 };

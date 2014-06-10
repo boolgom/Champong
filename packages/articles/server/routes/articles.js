@@ -19,7 +19,10 @@ module.exports = function(Articles, app, auth) {
         .get(articles.show)
         .put(auth.requiresLogin, hasAuthorization, articles.update)
         .delete(auth.requiresLogin, hasAuthorization, articles.destroy);
+    app.route('/articlewithname/:articleName')
+        .post(articles.showWithName);
 
     // Finish with setting up the articleId param
     app.param('articleId', articles.article);
+    app.param('articleName', articles.articleByName);
 };
