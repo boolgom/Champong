@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('ResultController', ['$scope', '$location', '$http', 'Global', function ($scope, $location, $http, Global) {
+angular.module('mean.system').controller('ResultController', ['$scope', '$location', '$http', 'Global', '$sce', function ($scope, $location, $http, Global, $sce) {
     Scope = $scope;
     $scope.global = Global;
 
@@ -155,6 +155,8 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
         $scope.currentItem = root;
     };
 
-
+    $scope.to_trusted = function(html_code) {
+        return $sce.trustAsHtml(html_code);
+    }
 
 }]);

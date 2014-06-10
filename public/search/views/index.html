@@ -22,8 +22,7 @@
             <br>
             {{currentItem.name}}
             <br>
-            설명: {{currentItem.description}}
-            <br>
+            설명: <p ng-bind-html="to_trusted(currentItem.description)"></p>
             가격: {{currentItem.price}}원
         </div>
         <div ng-show="!currentItem.children && !currentItem.price">
