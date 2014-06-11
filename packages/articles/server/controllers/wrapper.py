@@ -39,6 +39,8 @@ for productString in productList:
     productImgSrc = 'http:' + \
         re.search('<img src="(.+?)"[^>]*>', productString).group(1)
     productImgSrc = productImgSrc[:-7] + '.jpg'
+    productCode = productImgSrc[-13:][:7]
+    productPath = "http://prod.danawa.com/info/?pcode=" + productCode
     try:
         productPrice = re.search('<em[^>]*>(.+?)</em>', productString).group(1)
         productPrice = productPrice[:-1].replace(',', '')
@@ -46,7 +48,7 @@ for productString in productList:
         productPrice = 1
     data = {'name': productName, 'description': productDescription,
             'image': productImgSrc, 'price': productPrice,
-            'popularity': popularity}
+            'popularity': popularity, 'path': productPath}
     outList.append(data)
     popularity -= 1
 translateString = "|".join(descriptions)

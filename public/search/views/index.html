@@ -20,7 +20,7 @@
         <div ng-show="!currentItem.children && currentItem.price">
             <img class="productImage" ng-src="{{currentItem.image}}">
             <br>
-            {{currentItem.name}}
+            <h3><a ng-href="{{currentItem.path}}" target="_blank">{{currentItem.name}}</a></h3>
             <br>
             설명: <p ng-bind-html="to_trusted(currentItem.description)"></p>
             description : <p ng-bind-html="to_trusted(currentItem.descriptionEn)"></p>
