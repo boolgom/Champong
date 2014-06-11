@@ -1,8 +1,8 @@
 'use strict';
 
 //Setting up route
-angular.module('mean.system').config(['$stateProvider', '$urlRouterProvider',
-        function($stateProvider, $urlRouterProvider) {
+angular.module('mean.system').config(['$stateProvider', '$urlRouterProvider', '$translateProvider',
+        function($stateProvider, $urlRouterProvider, $translateProvider) {
             // For unmatched routes:
             $urlRouterProvider.otherwise('/');
 
@@ -19,6 +19,10 @@ angular.module('mean.system').config(['$stateProvider', '$urlRouterProvider',
                     url: '/search/{searchQuery}',
                     templateUrl: 'public/search/views/index.html'
                 });
+              $translateProvider.translations('en', {
+    HEADLINE: 'Hello there, This is my awesome app!',
+    INTRO_TEXT: 'And it has i18n support!'
+              });
         }
     ])
     .config(['$locationProvider',
