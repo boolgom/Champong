@@ -34,5 +34,16 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$rootSc
             };
         });
 
+        $scope.toEnglish = function() {
+            document.getElementById('languageSelection').setAttribute('class', 'dropdown');
+            $scope.global.lang = "en";
+            localStorage.setItem('lang','en');
+        }
+
+        $scope.toKorean = function() {
+            document.getElementById('languageSelection').setAttribute('class', 'dropdown');
+            $scope.global.lang = "ko";
+            localStorage.setItem('lang','ko');
+        }
     }
 ]);

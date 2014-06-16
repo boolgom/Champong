@@ -10,6 +10,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
         $http.post('/articlewithname/' + encodeURI($scope.searchQuery), {'foo':'bar'})
         .success(function(data, status, headers, config) {
             $scope.data = data;
+            $scope.currency = Number(data.currency);
             $scope.getBrands();
             $scope.groupedData = $scope.groupBrands();
             $scope.d3Init($scope.groupedData, 'popularity');
@@ -17,6 +18,11 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
             $scope.status = status;
         });
     };
+
+    $scope.getPriceConverted = function (item) {
+        if (item)
+            return Math.round(Number($scope.currentItem.price) / $scope.currency);
+    }
 
     $scope.byPrice = function () {
         $scope.d3Init($scope.groupedData, 'price');
@@ -65,7 +71,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
                 'children': brandList
             });
         }
-        var root = {'name': '전체', 'children': categoryList};
+        var root = {'name': $scope.searchQuery, 'children': categoryList};
         return root;
     };
 
@@ -78,6 +84,20 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
         .domain([-1, 5])
         .range(['hsl(200,80%,80%)', 'hsl(128,30%,40%)'])
         .interpolate(d3.interpolateHcl);
+
+        var getColor = function (depth) {
+            if (depth==-1)
+                //return '#a3f5cf';
+                return '#fff'
+            else if (depth==0)
+                return '75dccd';
+            else if (depth==1)
+                return '#4dc2ca';
+            else if (depth==2)
+                return '#308cb4';
+            else
+                return color(depth);
+        }
 
         var pack = d3.layout.pack()
         .padding(2)
@@ -98,7 +118,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
         .data(nodes)
         .enter().append('circle')
         .attr('class', function(d) { return d.parent ? d.children ? 'node' : 'node node--leaf' : 'node node--root'; })
-        .style('fill', function(d) { return color(d.depth); })
+        .style('fill', function(d) { return getColor(d.depth); })
         .on('click', function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); });
 
         var text = svg.selectAll('text')
@@ -112,7 +132,7 @@ angular.module('mean.system').controller('ResultController', ['$scope', '$locati
         var node = svg.selectAll('circle,text');
 
         d3.select('#graph')
-        .style('background', color(-1))
+        .style('background', getColor(-1))
         .on('click', function() { zoom(root); });
 
         zoomTo([root.x, root.y, root.r * 2 + margin]);

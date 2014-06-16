@@ -1,12 +1,19 @@
 'use strict';
 var spawn = require('child_process').spawn;
 
+var currencyGetter = spawn('python',  ['/Users/boolgom/Develop/Champong/packages/articles/server/controllers/currency.py']);
+
+var currency = '';
+currencyGetter.stdout.on('data', function(data){
+    currency += data;
+});
+
 /**
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Article = mongoose.model('Article'),
-    _ = require('lodash');
+Article = mongoose.model('Article'),
+_ = require('lodash');
 
 
 /**
@@ -22,15 +29,24 @@ exports.article = function(req, res, next, id) {
 };
 
 exports.articleByName = function(req, res, next, id) {
-    var python = spawn('python',  ['/Users/boolgom/Develop/Champong/packages/articles/server/controllers/wrapper.py', id]);
-    var output = '';
-    python.stdout.on('data', function(data){
-        output += data;
-    });
-    python.on('close', function(code){
-        if (code !== 0) {  return res.send(500, code); }
-        res.write(output);
-        res.end();
+    Article.findOne({ 'title': id }, function (err, article) {
+        if (article) {
+            res.write(article.content);
+            res.end();
+        } else {
+            var python = spawn('python',  ['/Users/boolgom/Develop/Champong/packages/articles/server/controllers/wrapper.py', id, currency]);
+            var output = '';
+            python.stdout.on('data', function(data){
+                output += data;
+            });
+            python.on('close', function(code){
+                if (code !== 0) {  return res.send(500, code); }
+                res.write(output);
+                res.end();
+                article = new Article({title: id, content: output});
+                article.save();
+            });
+        }
     });
 };
 

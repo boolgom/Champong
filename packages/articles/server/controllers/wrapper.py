@@ -24,6 +24,7 @@ def get_page(key):
     return data
 
 keyword = sys.argv[1]
+currency = sys.argv[2]
 result = get_page(keyword).decode('euc-kr')
 productList = result.split("<th")[1:]
 outList = []
@@ -56,5 +57,5 @@ translateString = gs.translate(translateString, 'en')
 translations = translateString.split('|')
 for i in range(len(outList)):
     outList[i]['descriptionEn'] = translations[i]
-output = {'name': 'graph', 'children': outList}
+output = {'name': 'graph', 'children': outList, 'currency': currency[:-1]}
 print json.dumps(output)

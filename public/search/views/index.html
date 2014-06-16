@@ -2,13 +2,13 @@
 <div class="row">
     <div class="graph" id="graph">
     </div>
-    <div class="controlView">
+    <div class="controlView" ng-show='global.lang=="ko"'>
         <div class="categorySelector">
             <span>set category : </span>
             <div class="btn-group">
-                <button type="button" class="btn btn-default" ng-click="byPrice()">Price</button>
-                <button type="button" class="btn btn-default" ng-click="byPopularity()">Popularity</button>
-                <button type="button" class="btn btn-default" ng-click="byReleaseDate()">Release Date</button>
+                <button type="button" class="btn btn-default" ng-click="byPopularity()">인기도</button>
+                <button type="button" class="btn btn-default" ng-click="byPrice()">가격</button>
+                <button type="button" class="btn btn-default" ng-click="byReleaseDate()">출시일</button>
             </div>
         </div>
         <div ng-show="currentItem.children && currentItem.parent">
@@ -23,11 +23,43 @@
             <h3><a ng-href="{{currentItem.path}}" target="_blank">{{currentItem.name}}</a></h3>
             <br>
             설명: <p ng-bind-html="to_trusted(currentItem.description)"></p>
-            description : <p ng-bind-html="to_trusted(currentItem.descriptionEn)"></p>
-            가격: {{currentItem.price}}원
+            가격: {{currentItem.price}}원<br>
         </div>
-        <div ng-show="!currentItem.children && !currentItem.price">
+        <div ng-show="data && !currentItem.children && !currentItem.price">
             검색결과가 없습니다.
+        </div>
+        <div ng-show="!data">
+            로딩 중...
+        </div>
+    </div>
+    <div class="controlView" ng-show='global.lang=="en"'>
+        <div class="categorySelector">
+            <span>set category : </span>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default" ng-click="byPrice()">Price</button>
+                <button type="button" class="btn btn-default" ng-click="byPopularity()">Popularity</button>
+                <button type="button" class="btn btn-default" ng-click="byReleaseDate()">Release Date</button>
+            </div>
+        </div>
+        <div ng-show="currentItem.children && currentItem.parent">
+            There are {{currentItem.children.length}} results for {{currentItem.name}}.
+        </div>
+        <div ng-show="currentItem.children && !currentItem.parent">
+            There are {{currentItem.children.length}} brands for {{currentItem.name}}.
+        </div>
+        <div ng-show="!currentItem.children && currentItem.price">
+            <img class="productImage" ng-src="{{currentItem.image}}">
+            <br>
+            <h3><a ng-href="{{currentItem.path}}" target="_blank">{{currentItem.name}}</a></h3>
+            <br>
+            description : <p ng-bind-html="to_trusted(currentItem.descriptionEn)"></p>
+            price: {{getPriceConverted(currentItem)}} $
+        </div>
+        <div ng-show="data && !currentItem.children && !currentItem.price">
+            There is no search results.
+        </div>
+        <div ng-show="!data">
+            Now loading...
         </div>
     </div>
     </section>

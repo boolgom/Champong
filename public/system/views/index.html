@@ -1,12 +1,16 @@
-<section data-ng-controller="IndexController">
-    <h1 Class="Logo" mean-token="'home-default'">Champong</h1>
+<section data-ng-controller="IndexController" data-ng-init="init()">
+<h1 Class="Logo" mean-token="'home-default'"><img src="/public/system/assets/img/title_cham.png"></h1>
     <div class="input-group search-bar">
         <input type="text" class="form-control" ng-model="searchQuery"
             ng-keypress="doInputSearch($event)">
-        <span class="input-group-btn">
+        <span class="input-group-btn" ng-show='global.lang=="en"'>
             <button class="btn btn-default" type="button"
                 ng-click="doSearch()">Search!</button>
         </span>
+        <span class="input-group-btn" ng-show='global.lang=="ko"'>
+            <button class="btn btn-default" type="button"
+                ng-click="doSearch()">검색</button>
+        </span>
+        {{currency.rate}}
     </div>
-
 </section>
